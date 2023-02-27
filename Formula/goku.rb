@@ -14,30 +14,12 @@ class Goku < Formula
     bin.install "gokuw"
   end
 
-  plist_options :manual => "gokuw"
-
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-      <key>Label</key>
-      <string>#{plist_name}</string>
-      <key>ProgramArguments</key>
-      <array>
-        <string>/bin/zsh</string>
-        <string>-c</string>
-        <string>exec -a gokuw #{Formula["watchexec"].opt_bin}/watchexec --restart -e edn --watch #{ENV["HOME"]}/.config/karabiner.edn #{opt_bin}/goku</string>
-      </array>
-      <key>StandardErrorPath</key>
-      <string>#{ENV["HOME"]}/Library/Logs/goku.log</string>
-      <key>StandardOutPath</key>
-      <string>#{ENV["HOME"]}/Library/Logs/goku.log</string>
-      <key>RunAtLoad</key>
-      <true/>
-    </dict>
-    </plist>
-  EOS
+  service do
+    run ["/bin/zsh", "-c", "exec -a gokuw #{Formula["watchexec"].opt_bin}/watchexec --restart -e edn --watch #{ENV["HOME"]}/.config/karabiner.edn #{opt_bin}/goku"]
+    keep_alive true
+    process_type :interactive
+    log_path "#{ENV["HOME"]}/Library/Logs/goku/goku.out.log"
+    error_log_path "#{ENV["HOME"]}/Library/Logs/goku/goku.err.log"
   end
 
   test do
