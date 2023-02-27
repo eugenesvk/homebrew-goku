@@ -1,6 +1,7 @@
 # Documentation: https://docs.brew.sh/Formula-Cookbook
 #                http://www.rubydoc.info/github/Homebrew/brew/master/Formula
 class Goku < Formula
+  depends_on "watchexec"
   depends_on "candid82/brew/joker"
   # depends_on "https://raw.githubusercontent.com/candid82/homebrew-brew/2491ed79f9733e6d58b41eef0a771659a0eed162/joker.rb"
   desc "karabiner configurator"
@@ -24,17 +25,10 @@ class Goku < Formula
       <string>#{plist_name}</string>
       <key>ProgramArguments</key>
       <array>
-        <string>#{opt_bin}/goku</string>
+        <string>/bin/zsh</string>
+        <string>-c</string>
+        <string>exec -a gokuw #{Formula["watchexec"].opt_bin}/watchexec --restart -e edn --watch #{ENV["HOME"]}/.config/karabiner.edn #{opt_bin}/goku</string>
       </array>
-      <key>WatchPaths</key>
-      <array>
-          <string>#{ENV["HOME"]}/.config/karabiner.edn</string>
-      </array>
-      <key>EnvironmentVariables</key>
-      <dict>
-          <key>GOKU_EDN_CONFIG_FILE</key>
-          <string>#{ENV["HOME"]}/.config/karabiner.edn</string>
-      </dict>
       <key>StandardErrorPath</key>
       <string>#{ENV["HOME"]}/Library/Logs/goku.log</string>
       <key>StandardOutPath</key>
